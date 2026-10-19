@@ -24,7 +24,7 @@
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font:14px/1.4 var(--f-body);overflow:hidden;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:10px;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+  margin:0;padding-top:18px;padding-bottom:max(32px,calc(env(safe-area-inset-bottom,0px) + 20px));box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 button{font-family:inherit}
 [hidden]{display:none!important}
 #app{height:100%;display:flex;flex-direction:column;gap:10px;max-width:1040px;margin:0 auto}
@@ -32,6 +32,7 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .brand{font:600 16px/1 var(--f-display);letter-spacing:.01em}
 .brand span{color:var(--accent)}
 header small{color:var(--muted);font-size:12px}
+#left{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;gap:10px}
 #stage{position:relative;flex:1;min-height:200px;border-radius:18px;overflow:hidden;background:var(--stage);touch-action:none}
 #c{display:block;width:100%;height:100%;outline:none;-webkit-touch-callout:none}
 .glass{background:rgba(255,250,245,.88);background:color-mix(in srgb,var(--panel) 84%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line)}
@@ -39,6 +40,21 @@ header small{color:var(--muted);font-size:12px}
 .pill svg{width:16px;height:16px;flex:none}
 .pill[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
 .tl{position:absolute;left:10px;top:10px}
+.fs{position:absolute;right:10px;top:56px;padding:8px;z-index:3}
+.fs .i2{display:none}.fs[aria-pressed="true"] .i1{display:none}.fs[aria-pressed="true"] .i2{display:block}
+#stage.full{position:fixed;inset:0;z-index:30;border-radius:0;min-height:0}
+#stage:fullscreen{border-radius:0}#stage:-webkit-full-screen{border-radius:0}
+#strip{flex:none;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px 8px;user-select:text;-webkit-user-select:text}
+#strip .specs{flex:1;min-width:0;flex-wrap:nowrap;overflow-x:auto;gap:4px 16px;scrollbar-width:none}
+#strip .specs::-webkit-scrollbar{display:none}
+#strip .specs div{flex:none}
+@media (max-width:520px){#strip .specs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);padding-right:14px}}
+#strip .specs b{font-size:13px}
+.cmpHint{flex:1;min-width:0;font:500 12px var(--f-body);color:var(--muted)}
+.sbtns{display:flex;gap:2px;flex:none;border-left:1px solid var(--line);padding-left:6px}
+.sb{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:60px;border:0;background:transparent;color:var(--ink);font:600 10px/1.1 var(--f-body);padding:5px 6px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.sb svg{width:18px;height:18px;flex:none}
+.sb[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .seg{position:absolute;top:10px;right:10px;display:flex;padding:3px;gap:2px;border-radius:999px}
 .seg button{display:flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--muted);font:500 13px var(--f-body);padding:7px 12px;border-radius:999px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
@@ -69,6 +85,7 @@ header small{color:var(--muted);font-size:12px}
 .row[data-slot="B"] small{color:var(--accent)}
 .row i{font:600 11px var(--f-body);font-style:normal;opacity:.85;margin-right:6px}
 .acts{display:flex;flex-wrap:wrap;gap:6px}
+.acts:empty{display:none}
 .btn{flex:1 1 40%;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--chip);color:var(--ink);font:600 13px var(--f-body);padding:10px 12px;border-radius:12px;cursor:pointer;text-decoration:none;text-align:center}
 .btn svg{width:16px;height:16px;flex:none}
 .btn.pri{flex:1 1 100%;background:var(--ink);color:var(--panel);border-color:var(--ink)}
@@ -111,7 +128,7 @@ header small{color:var(--muted);font-size:12px}
 .sw button[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--accent)}
 button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 body.notabs .pane-model .list{display:none}
-body.nopanel #panel{display:none}
+body.nopanel #panel,body.nopanel #strip{display:none}
 #arui{position:absolute;inset:0;pointer-events:none;display:none;font-family:var(--f-body)}
 #arui.on{display:block}
 #arui button{pointer-events:auto;border:0;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font:500 14px var(--f-body);padding:10px 16px}
@@ -119,13 +136,14 @@ body.nopanel #panel{display:none}
 #arui .bot{position:absolute;left:12px;right:12px;bottom:18px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 #arui p{position:absolute;left:0;right:0;bottom:80px;margin:0;text-align:center;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);font-size:14px;padding:0 24px}
 #arBtn{bottom:56px}
-@media (min-width:820px){#app{flex-direction:row;flex-wrap:wrap}header{width:100%}#stage{flex:1 1 600px;min-height:480px}#panel{flex:0 0 340px;align-self:stretch;max-height:none}.pane{min-height:0}}
+@media (min-width:820px){#app{flex-direction:row;flex-wrap:wrap}header{width:100%}#left{flex:1 1 600px}#stage{min-height:480px}#panel{flex:0 0 340px;align-self:stretch;max-height:none}.pane{min-height:0}}
 </style>
-
 </head>
 <body>
+
 <div id="app">
   <header><div class="brand">Дача<span>Дрим</span></div><small>3D-каталог домов</small></header>
+  <div id="left">
   <main id="stage">
     <canvas id="c" aria-label="3D-модель дома"></canvas>
     <button class="pill glass tl" id="spin" aria-pressed="true" type="button">
@@ -139,6 +157,10 @@ body.nopanel #panel{display:none}
       <button id="roofOn" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/></svg>С крышей</button>
       <button id="roofOff" type="button" aria-pressed="false">Без крыши</button>
     </div>
+    <button class="pill glass fs" id="bFs" type="button" aria-pressed="false" aria-label="На весь экран" title="На весь экран">
+      <svg class="i1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      <svg class="i2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+    </button>
     <button class="pill glass br" id="bRuler" type="button" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2M10 10l2 2M13 7l2 2"/></svg>Линейка
     </button>
@@ -155,6 +177,15 @@ body.nopanel #panel{display:none}
       <div class="bot"><button id="arL" type="button">⟲ Повернуть</button><button id="arR" type="button">Повернуть ⟳</button></div>
     </div>
   </main>
+  <div id="strip">
+    <div class="specs" id="specs"></div>
+    <div class="cmpHint" id="cmpHint" hidden>Сравнение двух домов: выберите дома в списке</div>
+    <div class="sbtns">
+      <button class="sb" id="bCmp" type="button" aria-pressed="false" title="Сравнить два дома"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg>Сравнить</button>
+      <button class="sb" id="bShare" type="button" title="Поделиться ссылкой"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Поделиться</button>
+    </div>
+  </div>
+  </div>
   <section id="panel">
     <div class="nav" role="tablist" id="nav">
       <button type="button" role="tab" data-p="model" aria-selected="true">Модель</button>
@@ -167,14 +198,11 @@ body.nopanel #panel{display:none}
         <button type="button" data-s="B" aria-pressed="true"></button>
       </div>
       <table class="cmpT" id="cmpT" hidden></table>
-      <div class="list" id="houses" role="tablist" aria-label="Модели"></div>
-      <div class="specs" id="specs"></div>
-      <p class="note" id="specNote"></p>
       <div class="acts">
         <a class="btn pri" id="bDetails" target="_blank" rel="noopener" hidden>Подробнее о модели <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-        <button class="btn" id="bCmp" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg>Сравнить</button>
-        <button class="btn" id="bShare" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Поделиться</button>
       </div>
+      <div class="list" id="houses" role="tablist" aria-label="Модели"></div>
+      <p class="note" id="specNote"></p>
     </div>
     <div class="pane" data-pane="color" hidden>
       <div class="chips" id="targets"></div>
@@ -560,7 +588,7 @@ function syncList(){
     sl.children[0].innerHTML='<b>Дом 1:</b> '+esc(houseLabel(a));sl.children[1].innerHTML='<b>Дом 2:</b> '+esc(houseLabel(b));
     sl.children[0].setAttribute('aria-pressed',String(state.slot==='A'));sl.children[1].setAttribute('aria-pressed',String(state.slot==='B'));
   }
-  $('bCmp').setAttribute('aria-pressed',String(state.cmp));$('bCmp').lastChild.textContent=state.cmp?'Выйти из сравнения':'Сравнить';
+  $('bCmp').setAttribute('aria-pressed',String(state.cmp));$('bCmp').lastChild.textContent=state.cmp?'Выйти':'Сравнить';$('cmpHint').hidden=!state.cmp;
   $('specs').hidden=state.cmp;$('specNote').hidden=state.cmp;$('cmpT').hidden=!state.cmp;
   var h=hById(A),dl=$('bDetails');dl.hidden=state.cmp||!h||!h.url;if(h&&h.url)dl.href=h.url;
   if(!state.cmp&&h)showSpecs(h);
@@ -802,6 +830,30 @@ $('arR').addEventListener('click',function(){if(holderInScene)holderInScene.rota
 ['arExit','arReset','arL','arR'].forEach(function(id){$(id).addEventListener('beforexrselect',function(e){e.preventDefault();});});
 
 /* ================= Loop ================= */
+/* Fullscreen: native API when allowed, otherwise the stage fills the page (iPhone Safari, iframe without permission) */
+var pseudoFs=false;
+function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement||null;}
+function syncFs(){
+  var on=!!fsEl()||pseudoFs,b=$('bFs');
+  stage.classList.toggle('full',pseudoFs&&!fsEl());
+  b.setAttribute('aria-pressed',String(on));
+  b.setAttribute('aria-label',on?'Свернуть':'На весь экран');b.title=on?'Свернуть':'На весь экран';
+  setTimeout(resize,60);setTimeout(resize,350);
+}
+function toggleFs(){
+  if(fsEl()||pseudoFs){
+    pseudoFs=false;
+    if(fsEl()){try{var x=(document.exitFullscreen||document.webkitExitFullscreen).call(document);if(x&&x.catch)x.catch(function(){});}catch(e){}}
+    syncFs();return;
+  }
+  var rq=stage.requestFullscreen||stage.webkitRequestFullscreen;
+  if(rq){try{var r=rq.call(stage);if(r&&r.catch)r.catch(function(){pseudoFs=true;syncFs();});}catch(e){pseudoFs=true;}}else pseudoFs=true;
+  syncFs();
+}
+$('bFs').addEventListener('click',toggleFs);
+document.addEventListener('fullscreenchange',function(){if(!fsEl())pseudoFs=false;syncFs();});
+document.addEventListener('webkitfullscreenchange',function(){if(!fsEl())pseudoFs=false;syncFs();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pseudoFs&&!fsEl()){pseudoFs=false;syncFs();}});
 function resize(){var w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;if(renderer.xr.isPresenting)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=(w/h)<.8?50:40;camera.updateProjectionMatrix();}
 if(window.ResizeObserver)new ResizeObserver(resize).observe(stage);window.addEventListener('resize',resize);resize();
 var last=performance.now(),tmpS=new THREE.Spherical(),tmpV=new THREE.Vector3();
