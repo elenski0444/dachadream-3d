@@ -142,7 +142,7 @@ body.nopanel #panel,body.nopanel #strip{display:none}
 #arui .bot{position:absolute;left:12px;right:12px;bottom:18px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 #arui p{position:absolute;left:0;right:0;bottom:80px;margin:0;text-align:center;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);font-size:14px;padding:0 24px}
 #arBtn{bottom:56px}
-@media (min-width:820px){#app{flex-direction:row;flex-wrap:wrap}header{width:100%}#left{flex:1 1 600px}#stage{min-height:480px}#panel{flex:0 0 340px;align-self:stretch;max-height:none}.pane{min-height:0}}
+@media (min-width:820px){#app{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:auto minmax(0,1fr);column-gap:10px}header{grid-column:1/-1}#left{min-height:0}#stage{min-height:360px}#panel{min-height:0;max-height:none;overflow-y:auto}.pane{min-height:0}}
 </style>
 </head>
 <body>
@@ -1061,7 +1061,6 @@ function syncAR(){
 function openQL(){
   var u=usdzUrl();if(!u)return;
   var a=document.createElement('a');a.rel='ar';var hk=window.__arHook&&window.__arHook(u);a.href=hk||(u+'#allowsContentScaling=0');
-  if(/CriOS|FxiOS|EdgiOS|OPiOS/.test(navigator.userAgent))toast('Если AR не открылся, откройте эту страницу в Safari');
   var im=document.createElement('img');im.alt='';im.width=1;im.height=1;a.appendChild(im);a.style.cssText='position:fixed;left:-9px;top:-9px;opacity:0';
   document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);},1500);
 }
